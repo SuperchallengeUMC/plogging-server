@@ -37,4 +37,30 @@ public class UserService {
             throw new BaseException(PASSWORD_ENCRYPTION_ERROR);
         }
     }
+
+    @Transactional
+    public PostLoginRes loginUser(PostLoginReq postLoginReq) throws BaseException{
+        if(userDao.checkNickName(postLoginReq.getNickName()) == 0){
+            throw new BaseException(FAILED_TO_LOGIN);
+        }
+        String realpw;
+        LoginInfo loginInfo;
+        loginInfo = userDao.checkNickNameAccount(postLoginReq.getNickName());
+        try{
+            realpw = new AES128(Secret.USER_INFO_PASSWORD_KEY).decrypt(loginInfo.getPassword());
+        } catch (Exception ignored) {
+            throw new BaseException(PASSWORD_DECRYPTION_ERROR);
+        }
+        PostLoginRes postLoginRes = new PostLoginRes();
+        if (postLoginReq.getPassword().equals(realpw)){
+
+            String jwt = jwtService.createJwt(loginInfo.getUserIdx());
+            postLoginRes.setJwt(jwt);
+            postLoginRes.setUserIdx(loginInfo.getUserIdx());
+            return postLoginRes;
+        }
+        else {
+            throw new BaseException(FAILED_TO_LOGIN);
+        }
+    }
 }

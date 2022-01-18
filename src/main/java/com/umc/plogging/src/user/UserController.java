@@ -5,6 +5,9 @@ import com.umc.plogging.config.BaseException;
 import com.umc.plogging.config.BaseResponse;
 import com.umc.plogging.src.user.dto.*;
 import com.umc.plogging.utils.JwtService;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -38,5 +41,17 @@ public class UserController {
         }
     }
 
-
+    @PostMapping("/login")
+    @ApiOperation(value = "로그인", response = BaseResponse.class)
+    public BaseResponse<PostLoginRes> loginUser(@RequestBody PostLoginReq postLoginReq) {
+        if(postLoginReq.getPassword()==null && postLoginReq.getNickName() ==null){
+            return new BaseResponse<>(REQUEST_ERROR);
+        }
+        try{
+            PostLoginRes postLoginRes = userService.loginUser(postLoginReq);
+            return new BaseResponse<>(postLoginRes);
+        } catch(BaseException exception){
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
 }

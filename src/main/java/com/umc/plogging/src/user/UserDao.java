@@ -33,4 +33,12 @@ public class UserDao {
                 int.class,
                 nickName);
     }
+
+    public LoginInfo checkNickNameAccount(String nickName){
+        return this.jdbcTemplate.queryForObject("select password, userIdx from User where name=?",
+                (rs, rowNum) -> new LoginInfo(
+                        rs.getString("password"),
+                        rs.getInt("userIdx")),
+                nickName);
+    }
 }
