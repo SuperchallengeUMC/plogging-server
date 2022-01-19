@@ -31,6 +31,7 @@ public enum BaseResponseStatus {
     POST_USERS_EXISTS_EMAIL(false,2017,"중복된 이메일입니다."),
     POST_USERS_EXISTS_NAME(false,2018,"중복된 닉네임입니다."),
     POST_USERS_NONEXIST_ACCOUNT(false,2019,"회원가입부터 해주세요."),
+    NON_EXIST_PLOG(false,2020,"없는 기록입니다."),
 
 
 
