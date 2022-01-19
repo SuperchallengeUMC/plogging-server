@@ -9,5 +9,5 @@ import lombok.Setter;
 @AllArgsConstructor
 
 public class DeleteCrewRes {
-    public int crewIdx;
+    private int crewIdx;
 }

@@ -1,7 +1,9 @@
 package com.umc.plogging.src.crews;
 
+import com.umc.plogging.config.BaseException;
 import com.umc.plogging.src.crews.model.*;
 
+import com.umc.plogging.utils.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -23,6 +25,28 @@ public class CrewDao {
         String createCrewQuery = "insert into Crew (userIdx, createdAt, name, description, howmany, targetDay, contact, region) VALUES (?,NOW(),?,?,?,?,?,?)";
         Object[] createCrewParams = new Object[]{postCrewReq.getUserIdx(), postCrewReq.getName(), postCrewReq.getDescription(), postCrewReq.getHowmany(), postCrewReq.getTargetDay(), postCrewReq.getContact(), postCrewReq.getRegion()};
         this.jdbcTemplate.update(createCrewQuery, createCrewParams);
+
+        String lastInsertIdQuery = "select last_insert_id()";
+        return this.jdbcTemplate.queryForObject(lastInsertIdQuery, int.class);
+    }
+
+    // 크루 탈퇴
+    /*
+    public DeleteCrewRes deleteCrew(int crewIdx){
+        String deleteCrewQuery = "delete from Member where crewIdx = ?";
+        return this.jdbcTemplate.queryForObject(deleteCrewQuery,
+                (rs, rowNum)-> new DeleteCrewRes(
+                        rs.getInt("crewIdx")
+                ),
+                crewIdx);
+    }
+     */
+    
+    // 크루 가입
+    public int joinCrew(int crewIdx, int userIdxByJwt) throws BaseException {
+        String joinCrewQuery = "insert into Member (crewIdx, userIdx, createdAt) VALUES (?,?,NOW())";
+        Object[] joinCrewParams = new Object[]{crewIdx, userIdxByJwt};
+        this.jdbcTemplate.update(joinCrewQuery, joinCrewParams);
 
         String lastInsertIdQuery = "select last_insert_id()";
         return this.jdbcTemplate.queryForObject(lastInsertIdQuery, int.class);

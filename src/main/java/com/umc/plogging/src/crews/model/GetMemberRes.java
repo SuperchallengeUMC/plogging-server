@@ -11,10 +11,10 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 
 public class GetMemberRes {
-    public int memberIdx;
-    public int crewIdx;
-    public int userIdx;
-    public Timestamp createdAt;
-    public String comment;
-    public char isKing;
+    private int memberIdx;
+    private int crewIdx;
+    private int userIdx;
+    private Timestamp createdAt;
+    private String comment;
+    private char isKing;
 }

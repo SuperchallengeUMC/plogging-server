@@ -11,12 +11,12 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 
 public class PostCrewReq {
-    public int userIdx;
-    public Timestamp createdAt;
-    public String name;
-    public String description;
-    public int howmany;
-    public Timestamp targetDay;
-    public String contact;
-    public String region;
+    private int userIdx;
+    private Timestamp createdAt;
+    private String name;
+    private String description;
+    private int howmany;
+    private Timestamp targetDay;
+    private String contact;
+    private String region;
 }

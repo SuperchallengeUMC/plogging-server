@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
 import static com.umc.plogging.config.BaseResponseStatus.*;
 
 @RestController
-@RequestMapping("/app/crews")
+@RequestMapping("/crews")
 
 public class CrewController {
     // *********************** 동작에 있어 필요한 요소들을 불러옵니다. *************************
@@ -70,6 +70,23 @@ public class CrewController {
 
             List<GetCrewRes> getCrewsRes = crewProvider.getCrewsByRegion(region);
             return new BaseResponse<>(getCrewsRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+    /**
+     * 크루 가입 API
+     * [POST] /crews/:crewIdx
+     */
+    // Body
+    @ResponseBody
+    @PostMapping("/{crewIdx}")
+    public BaseResponse<PostMemberRes> joinCrew(@PathVariable("crewIdx") int crewIdx) {
+        try {
+            int userIdxByJwt = jwtService.getUserIdx();
+            PostMemberRes postMemberRes = crewService.joinCrew(crewIdx, userIdxByJwt);
+            return new BaseResponse<>(postMemberRes);
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }

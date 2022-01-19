@@ -11,11 +11,11 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 
 public class GetCrewRes {
-    public int crewIdx;
-    public int userIdx;
-    public String status;
-    public String name;
-    public Timestamp targetDay;
-    public String region;
-    public String userImage;
+    private int crewIdx;
+    private int userIdx;
+    private String status;
+    private String name;
+    private Timestamp targetDay;
+    private String region;
+    private String userImage;
 }
