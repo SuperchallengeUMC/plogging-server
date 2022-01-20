@@ -1,4 +1,4 @@
-package com.umc.plogging.src.crews.model;
+package com.umc.plogging.src.crews.model.crew;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,13 +10,13 @@ import java.sql.Timestamp;
 @Setter
 @AllArgsConstructor
 
-public class PostCrewReq {
-    private int userIdx;
-    private Timestamp createdAt;
+public class GetCrewRes {
+    private int crewIdx;
+    private String status;
     private String name;
-    private String description;
-    private int howmany;
     private Timestamp targetDay;
-    private String contact;
     private String region;
+    private String description;
+    private String userImage;
 }
+

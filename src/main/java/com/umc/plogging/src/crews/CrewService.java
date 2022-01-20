@@ -1,7 +1,8 @@
 package com.umc.plogging.src.crews;
 
 import com.umc.plogging.config.BaseException;
-import com.umc.plogging.src.crews.model.*;
+import com.umc.plogging.src.crews.model.crew.*;
+import com.umc.plogging.src.crews.model.member.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,15 +42,17 @@ public class CrewService {
     }
 
     // 크루 탈퇴 (DELETE)
-    /*
-    public DeleteCrewRes deleteCrew(int crewIdx) throws BaseException {
+    public DeleteMemberRes deleteMember(int crewIdx, int userIdx) throws BaseException {
+        DeleteMemberRes deleteMemberRes = crewDao.deleteMember(crewIdx, userIdx);
+        return deleteMemberRes;
+        /*
         try {
-            DeleteCrewRes deleteCrewRes = crewDao.deleteCrew(crewIdx);
-            return deleteCrewRes;
+            DeleteMemberRes deleteMemberRes = crewDao.deleteMember(crewIdx, userIdx);
+            return deleteMemberRes;
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }
+         */
     }
-     */
 
 }

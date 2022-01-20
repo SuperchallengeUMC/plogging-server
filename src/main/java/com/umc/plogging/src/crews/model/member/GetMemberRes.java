@@ -1,4 +1,4 @@
-package com.umc.plogging.src.crews.model;
+package com.umc.plogging.src.crews.model.member;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,9 +12,9 @@ import java.sql.Timestamp;
 
 public class GetMemberRes {
     private int memberIdx;
-    private int crewIdx;
     private int userIdx;
-    private Timestamp createdAt;
+    private String name;
     private String comment;
-    private char isKing;
+    private String userImage;
+    private String isKing;
 }

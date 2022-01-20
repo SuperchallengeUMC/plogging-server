@@ -1,4 +1,4 @@
-package com.umc.plogging.src.crews.model;
+package com.umc.plogging.src.crews.model.member;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,6 +8,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 
-public class DeleteCrewRes {
-    private int crewIdx;
+public class DeleteMemberRes {
+    private int memberIdx;
 }

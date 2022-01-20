@@ -1,4 +1,4 @@
-package com.umc.plogging.src.crews.model;
+package com.umc.plogging.src.crews.model.crew;
 
 import lombok.*;
 

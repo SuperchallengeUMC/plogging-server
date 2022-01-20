@@ -1,9 +1,9 @@
 package com.umc.plogging.src.crews;
 
 import com.umc.plogging.config.BaseException;
-import com.umc.plogging.src.crews.model.*;
 
-import com.umc.plogging.utils.JwtService;
+import com.umc.plogging.src.crews.model.crew.*;
+import com.umc.plogging.src.crews.model.member.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -29,18 +29,6 @@ public class CrewDao {
         String lastInsertIdQuery = "select last_insert_id()";
         return this.jdbcTemplate.queryForObject(lastInsertIdQuery, int.class);
     }
-
-    // 크루 탈퇴
-    /*
-    public DeleteCrewRes deleteCrew(int crewIdx){
-        String deleteCrewQuery = "delete from Member where crewIdx = ?";
-        return this.jdbcTemplate.queryForObject(deleteCrewQuery,
-                (rs, rowNum)-> new DeleteCrewRes(
-                        rs.getInt("crewIdx")
-                ),
-                crewIdx);
-    }
-     */
     
     // 크루 가입
     public int joinCrew(int crewIdx, int userIdxByJwt) throws BaseException {
@@ -53,14 +41,13 @@ public class CrewDao {
     }
 
     // Crew 테이블에 존재하는 전체 크루들의 정보 조회
-    public List<GetCrewRes> getCrews() {
-        String getCrewsQuery = "select C.crewIdx, C.userIdx, C.name, C.targetDay, C.status, C.region, U.userImage\n" +
+    public List<GetCrewsRes> getCrews() {
+        String getCrewsQuery = "select C.crewIdx, C.name, C.targetDay, C.status, C.region, U.userImage\n" +
                 "from Crew C\n" +
                 "inner join User U where C.userIdx=U.userIdx;"; //Crew 테이블에 존재하는 모든 회원들의 정보를 조회하는 쿼리
         return this.jdbcTemplate.query(getCrewsQuery,
-                (rs, rowNum) -> new GetCrewRes(
+                (rs, rowNum) -> new GetCrewsRes(
                         rs.getInt("crewIdx"),
-                        rs.getInt("userIdx"),
                         rs.getString("status"),
                         rs.getString("name"),
                         rs.getTimestamp("targetDay"),
@@ -70,15 +57,31 @@ public class CrewDao {
         );
     }
 
+    public GetCrewRes getCrew(int crewIdx) {
+        String getCrewQuery = "select C.crewIdx, C.name, C.targetDay, C.status, C.region, C.description, U.userImage\n" +
+                "from Crew C\n" +
+                "inner join User U where C.userIdx=U.userIdx and crewIdx=?";
+        return this.jdbcTemplate.queryForObject(getCrewQuery,
+                (rs, rowNum) -> new GetCrewRes(
+                        rs.getInt("crewIdx"),
+                        rs.getString("status"),
+                        rs.getString("name"),
+                        rs.getTimestamp("targetDay"),
+                        rs.getString("region"),
+                        rs.getString("description"),
+                        rs.getString("userImage")
+                ),
+                crewIdx);
+    }
+
     // 해당 region에 속하는 크루들의 정보 조회
-    public List<GetCrewRes> getCrewsByRegion(String region) {
-        String getCrewsByRegionQuery = "select C.crewIdx, C.userIdx, C.name, C.targetDay, C.status, C.region, U.userImage\n" +
+    public List<GetCrewsRes> getCrewsByRegion(String region) {
+        String getCrewsByRegionQuery = "select C.crewIdx, C.name, C.targetDay, C.status, C.region, U.userImage\n" +
                 "from Crew C\n" +
                 "inner join User U where C.userIdx=U.userIdx and C.region=?";
         return this.jdbcTemplate.query(getCrewsByRegionQuery,
-                (rs, rowNum) -> new GetCrewRes(
+                (rs, rowNum) -> new GetCrewsRes(
                         rs.getInt("crewIdx"),
-                        rs.getInt("userIdx"),
                         rs.getString("status"),
                         rs.getString("name"),
                         rs.getTimestamp("targetDay"),
@@ -88,15 +91,78 @@ public class CrewDao {
                 region);
     }
 
-    // 크루 탈퇴
-    /*
-    public DeleteCrewRes deleteCrew(int crewIdx){
-        String deleteCrewQuery = "delete from Member where crewIdx = ?";
-        return this.jdbcTemplate.queryForObject(deleteCrewQuery,
-                (rs, rowNum)-> new DeleteCrewRes(
-                        rs.getInt("crewIdx")
-                ),
-                crewIdx);
+    // 가입한 크루들의 정보 조회
+    public List<GetCrewsRes> getCrewsByStatus(String status, int userIdxByJwt) {
+        String getActiveCrewsQuery = "select C.crewIdx, C.name, C.targetDay, C.status, C.region\n" +
+                "from Crew C\n" +
+                "inner join Member M\n" +
+                "    on C.crewIdx=M.crewIdx\n" +
+                "inner join User U\n" +
+                "    on M.userIdx=U.userIdx\n" +
+                "where M.userIdx=? and datediff(C.targetDay, NOW()) >= 0";
+
+        String getDoneCrewsQuery = "select C.crewIdx, C.name, C.targetDay, C.status, C.region\n" +
+                "from Crew C\n" +
+                "inner join Member M\n" +
+                "    on C.crewIdx=M.crewIdx\n" +
+                "inner join User U\n" +
+                "    on M.userIdx=U.userIdx\n" +
+                "where M.userIdx=? and datediff(C.targetDay, NOW()) < 0";
+
+        if(status=="active") {
+            return this.jdbcTemplate.query(getActiveCrewsQuery,
+                    (rs, rowNum) -> new GetCrewsRes(
+                            rs.getInt("crewIdx"),
+                            rs.getString("status"),
+                            rs.getString("name"),
+                            rs.getTimestamp("targetDay"),
+                            rs.getString("region"),
+                            rs.getString("userImage")
+                    ),
+                    userIdxByJwt);
+        }
+        else {
+            return this.jdbcTemplate.query(getDoneCrewsQuery,
+                    (rs, rowNum) -> new GetCrewsRes(
+                            rs.getInt("crewIdx"),
+                            rs.getString("status"),
+                            rs.getString("name"),
+                            rs.getTimestamp("targetDay"),
+                            rs.getString("region"),
+                            rs.getString("userImage")
+                    ),
+                    userIdxByJwt);
+        }
+
     }
-     */
+
+    public List<GetMemberRes> getMembers(int crewIdx) {
+        String getMembersQuery = "select M.crewIdx, M.userIdx, U.name, U.comment, U.userImage, M.isKing\n" +
+                "from Member M\n" +
+                "inner join User U\n" +
+                "on M.userIdx = U.userIdx\n" +
+                "where crewIdx=?";
+        return this.jdbcTemplate.query(getMembersQuery,
+                (rs, rowNum) -> new GetMemberRes(
+                        rs.getInt("crewIdx"),
+                        rs.getInt("userIdx"),
+                        rs.getString("name"),
+                        rs.getString("comment"),
+                        rs.getString("userImage"),
+                        rs.getString("isKing")
+
+                )
+                , crewIdx
+        );
+    }
+
+    // 크루 탈퇴 (미완성)
+    public DeleteMemberRes deleteMember(int crewIdx, int userIdx){
+        String deleteMemberQuery = "delete from Member where crewIdx = ? and userIdx=?";
+        return this.jdbcTemplate.queryForObject(deleteMemberQuery,
+                (rs, rowNum)-> new DeleteMemberRes(
+                        rs.getInt("memberIdx")
+                ),
+                crewIdx, userIdx);
+    }
 }

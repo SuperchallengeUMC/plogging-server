@@ -1,6 +1,7 @@
 package com.umc.plogging.src.crews;
 
-import com.umc.plogging.src.crews.model.*;
+import com.umc.plogging.src.crews.model.crew.*;
+import com.umc.plogging.src.crews.model.member.*;
 import com.umc.plogging.utils.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,11 +11,6 @@ import com.umc.plogging.config.BaseResponse;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import static com.umc.plogging.config.BaseResponseStatus.*;
 
 @RestController
 @RequestMapping("/crews")
@@ -56,23 +52,79 @@ public class CrewController {
      * 모든 크루 조회 API
      * [GET] /crews
      * 또는
-     * 해당 지역, 크루원, 상태를 가지는 크루 API
-     * [GET] /crews?region="" /crews?crewidx=""&status=""
+     * 해당 지역 크루 조회 API
+     * [GET] /crews?region=""
      */
     @ResponseBody
     @GetMapping("")
-    public BaseResponse<List<GetCrewRes>> getCrews(@RequestParam(required = false) String region) {
+    public BaseResponse<List<GetCrewsRes>> getCrews(@RequestParam(required = false) String region) {
         try {
             if (region == null) {
-                List<GetCrewRes> getCrewsRes = crewProvider.getCrews();
+                List<GetCrewsRes> getCrewsRes = crewProvider.getCrews();
                 return new BaseResponse<>(getCrewsRes);
             }
 
-            List<GetCrewRes> getCrewsRes = crewProvider.getCrewsByRegion(region);
+            List<GetCrewsRes> getCrewsRes = crewProvider.getCrewsByRegion(region);
             return new BaseResponse<>(getCrewsRes);
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }
+    }
+
+    /**
+     * 가입한 크루 조회 API
+     * [GET] /crews/mycrews?status=""
+     */
+    @ResponseBody
+    @GetMapping("/mycrews")
+    public BaseResponse<List<GetCrewsRes>> getMyCrews(@RequestParam(required = false) String status) {
+        try {
+            int userIdxByJwt = jwtService.getUserIdx();
+
+            if (status == null) {
+                // status queryString을 추가해주세요라는 에러 메세지
+            }
+
+            List<GetCrewsRes> getCrewsRes = crewProvider.getCrewsByStatus(status, userIdxByJwt);
+            return new BaseResponse<>(getCrewsRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+    /**
+     * 크루 하나 조회 API
+     * [GET] /crews/:userIdx
+     */
+    // Path-variable
+    @ResponseBody
+    @GetMapping("/{crewIdx}")
+    public BaseResponse<GetCrewRes> getCrew(@PathVariable("crewIdx") int crewIdx) {
+        try {
+            GetCrewRes getCrewRes = crewProvider.getCrew(crewIdx);
+            return new BaseResponse<>(getCrewRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+
+    }
+
+    /**
+     * 크루 소속 크루원 조회 API
+     * [GET] /crews/:userIdx
+     */
+    // Path-variable
+    @ResponseBody
+    @GetMapping("/{crewIdx}/member")
+    public BaseResponse<List<GetMemberRes>> getMembers(@PathVariable("crewIdx") int crewIdx) {
+
+        try {
+            List<GetMemberRes> getMembersRes = crewProvider.getMembers(crewIdx);
+            return new BaseResponse<>(getMembersRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+
     }
 
     /**
@@ -94,18 +146,16 @@ public class CrewController {
 
     /**
      * 크루 탈퇴 API
-     * [DELETE] /crews/:crewIdx
+     * [DELETE] /crews/:crewIdx/:userIdx
      */
-    /*
     @ResponseBody
-    @DeleteMapping("/{crewIdx}")
-    public BaseResponse<DeleteCrewRes> DeleteCrew(@PathVariable("crewIdx") int crewIdx) {
+    @DeleteMapping("/{crewIdx}/{userIdx}")
+    public BaseResponse<DeleteMemberRes> DeleteMember(@PathVariable("crewIdx") int crewIdx, @PathVariable("userIdx") int userIdx) {
         try {
-            DeleteCrewRes deleteCrewRes = crewService.deleteCrew(crewIdx);
-            return new BaseResponse<>(deleteCrewRes);
+            DeleteMemberRes deleteMemberRes = crewService.deleteMember(crewIdx, userIdx);
+            return new BaseResponse<>(deleteMemberRes);
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }
     }
-     */
 }
