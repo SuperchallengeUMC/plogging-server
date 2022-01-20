@@ -43,18 +43,14 @@ public class CrewService {
 
     // 크루 탈퇴 (DELETE)
     public void deleteMember(int crewIdx, int userIdx) throws BaseException {
-        int result = crewDao.deleteMember(crewIdx, userIdx);
-        if (result == 0) {
-            throw new BaseException(FAILED_TO_DELETE);
-        }
-        /*
         try {
-            DeleteMemberRes deleteMemberRes = crewDao.deleteMember(crewIdx, userIdx);
-            return deleteMemberRes;
+            int result = crewDao.deleteMember(crewIdx, userIdx);
+            if (result == 0) {
+                throw new BaseException(FAILED_TO_DELETE);
+            }
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }
-         */
     }
 
 }

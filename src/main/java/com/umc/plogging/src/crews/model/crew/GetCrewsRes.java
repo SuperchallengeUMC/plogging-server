@@ -12,7 +12,7 @@ import java.sql.Timestamp;
 
 public class GetCrewsRes {
     private int crewIdx;
-    private String status;
+    private char status;
     private String name;
     private Timestamp targetDay;
     private String region;

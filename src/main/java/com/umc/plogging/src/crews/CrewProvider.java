@@ -19,7 +19,7 @@ public class CrewProvider {
         this.crewDao = crewDao;
     }
 
-    // Crew들의 정보를 조회
+    // 전체 크루 조회
     public List<GetCrewsRes> getCrews() throws BaseException {
         try {
             List<GetCrewsRes> getCrewRes = crewDao.getCrews();
@@ -30,31 +30,21 @@ public class CrewProvider {
     }
 
     public GetCrewRes getCrew(int crewIdx) throws BaseException {
-        GetCrewRes getCrewRes = crewDao.getCrew(crewIdx);
-        return getCrewRes;
-
-        /*
         try {
             GetCrewRes getCrewRes = crewDao.getCrew(crewIdx);
             return getCrewRes;
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }
-         */
     }
 
     public List<GetMemberRes> getMembers(int crewIdx) throws BaseException {
-        List<GetMemberRes> getMembersRes = crewDao.getMembers(crewIdx);
-        return getMembersRes;
-
-        /*
         try {
-            GetCrewRes getCrewRes = crewDao.getCrew(crewIdx);
-            return getCrewRes;
+            List<GetMemberRes> getMembersRes = crewDao.getMembers(crewIdx);
+            return getMembersRes;
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }
-         */
     }
 
     // 해당 region의 Crew들의 정보 조회
@@ -68,17 +58,12 @@ public class CrewProvider {
     }
 
     // 가입한 Crew들의 정보 조회
-    public List<GetCrewsRes> getCrewsByStatus(String status, int userIdxByJwt) throws BaseException {
-        List<GetCrewsRes> getCrewsRes = crewDao.getCrewsByStatus(status, userIdxByJwt);
-        return getCrewsRes;
-
-        /*
+    public List<GetCrewsRes> getCrewsByStatus(char status, int userIdxByJwt) throws BaseException {
         try {
-            List<GetCrewRes> getCrewsRes = crewDao.getCrewsByStatus(userIdx, status);
+            List<GetCrewsRes> getCrewsRes = crewDao.getCrewsByStatus(status, userIdxByJwt);
             return getCrewsRes;
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }
-         */
     }
 }

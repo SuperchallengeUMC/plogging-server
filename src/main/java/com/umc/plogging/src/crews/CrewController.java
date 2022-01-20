@@ -77,13 +77,15 @@ public class CrewController {
      */
     @ResponseBody
     @GetMapping("/mycrews")
-    public BaseResponse<List<GetCrewsRes>> getMyCrews(@RequestParam(required = false) String status) {
+    public BaseResponse<List<GetCrewsRes>> getMyCrews(@RequestParam(required = false) char status) {
         try {
             int userIdxByJwt = jwtService.getUserIdx();
 
+            /*
             if (status == null) {
                 // status queryString을 추가해주세요라는 에러 메세지
             }
+             */
 
             List<GetCrewsRes> getCrewsRes = crewProvider.getCrewsByStatus(status, userIdxByJwt);
             return new BaseResponse<>(getCrewsRes);

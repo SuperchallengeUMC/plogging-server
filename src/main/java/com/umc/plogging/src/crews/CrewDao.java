@@ -48,7 +48,7 @@ public class CrewDao {
         return this.jdbcTemplate.query(getCrewsQuery,
                 (rs, rowNum) -> new GetCrewsRes(
                         rs.getInt("crewIdx"),
-                        rs.getString("status"),
+                        rs.getString("status").charAt(0),
                         rs.getString("name"),
                         rs.getTimestamp("targetDay"),
                         rs.getString("region"),
@@ -82,7 +82,7 @@ public class CrewDao {
         return this.jdbcTemplate.query(getCrewsByRegionQuery,
                 (rs, rowNum) -> new GetCrewsRes(
                         rs.getInt("crewIdx"),
-                        rs.getString("status"),
+                        rs.getString("status").charAt(0),
                         rs.getString("name"),
                         rs.getTimestamp("targetDay"),
                         rs.getString("region"),
@@ -92,28 +92,28 @@ public class CrewDao {
     }
 
     // 가입한 크루들의 정보 조회
-    public List<GetCrewsRes> getCrewsByStatus(String status, int userIdxByJwt) {
-        String getActiveCrewsQuery = "select C.crewIdx, C.name, C.targetDay, C.status, C.region\n" +
+    public List<GetCrewsRes> getCrewsByStatus(char status, int userIdxByJwt) {
+        String getActiveCrewsQuery = "select C.crewIdx, C.status, C.name, C.targetDay, C.region, U.userImage\n" +
                 "from Crew C\n" +
                 "inner join Member M\n" +
                 "    on C.crewIdx=M.crewIdx\n" +
                 "inner join User U\n" +
                 "    on M.userIdx=U.userIdx\n" +
-                "where M.userIdx=? and datediff(C.targetDay, NOW()) >= 0";
+                "where M.userIdx=? and timestampdiff(minute, NOW(), C.targetDay) >= 0";
 
-        String getDoneCrewsQuery = "select C.crewIdx, C.name, C.targetDay, C.status, C.region\n" +
+        String getDoneCrewsQuery = "select C.crewIdx, C.status, C.name, C.targetDay C.region, U.userImage\n" +
                 "from Crew C\n" +
                 "inner join Member M\n" +
                 "    on C.crewIdx=M.crewIdx\n" +
                 "inner join User U\n" +
                 "    on M.userIdx=U.userIdx\n" +
-                "where M.userIdx=? and datediff(C.targetDay, NOW()) < 0";
+                "where M.userIdx=? and timestampdiff(minute, NOW(), C.targetDay) < 0;";
 
-        if(status=="active") {
+        if(status=="T".charAt(0)) {
             return this.jdbcTemplate.query(getActiveCrewsQuery,
                     (rs, rowNum) -> new GetCrewsRes(
                             rs.getInt("crewIdx"),
-                            rs.getString("status"),
+                            rs.getString("status").charAt(0),
                             rs.getString("name"),
                             rs.getTimestamp("targetDay"),
                             rs.getString("region"),
@@ -121,19 +121,16 @@ public class CrewDao {
                     ),
                     userIdxByJwt);
         }
-        else {
-            return this.jdbcTemplate.query(getDoneCrewsQuery,
-                    (rs, rowNum) -> new GetCrewsRes(
-                            rs.getInt("crewIdx"),
-                            rs.getString("status"),
-                            rs.getString("name"),
-                            rs.getTimestamp("targetDay"),
-                            rs.getString("region"),
-                            rs.getString("userImage")
-                    ),
-                    userIdxByJwt);
-        }
-
+        return this.jdbcTemplate.query(getDoneCrewsQuery,
+                (rs, rowNum) -> new GetCrewsRes(
+                        rs.getInt("crewIdx"),
+                        rs.getString("status").charAt(0),
+                        rs.getString("name"),
+                        rs.getTimestamp("targetDay"),
+                        rs.getString("region"),
+                        rs.getString("userImage")
+                ),
+                userIdxByJwt);
     }
 
     // 크루에 가입한 유저 조회
