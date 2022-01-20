@@ -150,10 +150,12 @@ public class CrewController {
      */
     @ResponseBody
     @DeleteMapping("/{crewIdx}/{userIdx}")
-    public BaseResponse<DeleteMemberRes> DeleteMember(@PathVariable("crewIdx") int crewIdx, @PathVariable("userIdx") int userIdx) {
+    public BaseResponse<String> DeleteMember(@PathVariable("crewIdx") int crewIdx, @PathVariable("userIdx") int userIdx) {
         try {
-            DeleteMemberRes deleteMemberRes = crewService.deleteMember(crewIdx, userIdx);
-            return new BaseResponse<>(deleteMemberRes);
+            crewService.deleteMember(crewIdx, userIdx);
+            String result = "크루를 탈퇴하였습니다.";
+
+            return new BaseResponse<>(result);
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }

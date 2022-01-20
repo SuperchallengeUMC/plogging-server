@@ -136,6 +136,7 @@ public class CrewDao {
 
     }
 
+    // 크루에 가입한 유저 조회
     public List<GetMemberRes> getMembers(int crewIdx) {
         String getMembersQuery = "select M.crewIdx, M.userIdx, U.name, U.comment, U.userImage, M.isKing\n" +
                 "from Member M\n" +
@@ -157,12 +158,9 @@ public class CrewDao {
     }
 
     // 크루 탈퇴 (미완성)
-    public DeleteMemberRes deleteMember(int crewIdx, int userIdx){
+    public int deleteMember(int crewIdx, int userIdx){
         String deleteMemberQuery = "delete from Member where crewIdx = ? and userIdx=?";
-        return this.jdbcTemplate.queryForObject(deleteMemberQuery,
-                (rs, rowNum)-> new DeleteMemberRes(
-                        rs.getInt("memberIdx")
-                ),
-                crewIdx, userIdx);
+        Object[] deleteMemberParams = new Object[]{crewIdx, userIdx};
+        return this.jdbcTemplate.update(deleteMemberQuery, deleteMemberParams); // 성공 - 1, 실패 - 0
     }
 }
