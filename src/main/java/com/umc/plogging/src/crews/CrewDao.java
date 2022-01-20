@@ -27,7 +27,13 @@ public class CrewDao {
         this.jdbcTemplate.update(createCrewQuery, createCrewParams);
 
         String lastInsertIdQuery = "select last_insert_id()";
-        return this.jdbcTemplate.queryForObject(lastInsertIdQuery, int.class);
+        int crewIdx = this.jdbcTemplate.queryForObject(lastInsertIdQuery, int.class);
+
+        String setKingQuery = "insert into Member (crewIdx, userIdx, createdAt, isKing) values (?,?,NOW(),?)";
+        Object[] setKingParams = new Object[]{crewIdx, postCrewReq.getUserIdx(),"T"};
+        this.jdbcTemplate.update(setKingQuery, setKingParams);
+
+        return crewIdx;
     }
     
     // 크루 가입
