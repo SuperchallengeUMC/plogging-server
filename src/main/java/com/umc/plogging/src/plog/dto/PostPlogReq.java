@@ -5,20 +5,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class PlogRes {
-    private String title;
+public class PostPlogReq {
     private String calorie;
     private String distance;
     private String time;
-    private String date;
-    private String record;
-    private List<String> pictures = new ArrayList<>();
-
+    private List<String> pictures;
 }

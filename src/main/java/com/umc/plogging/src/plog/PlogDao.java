@@ -1,6 +1,7 @@
 package com.umc.plogging.src.plog;
 
 import com.umc.plogging.src.plog.dto.Calender;
+import com.umc.plogging.src.plog.dto.PostPlogReq;
 import com.umc.plogging.src.user.dto.LoginInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -41,15 +42,15 @@ public class PlogDao {
                 ,plogIdx);
     }
 
-    public List<Timestamp> getEnd(int userIdx){
-        List<Timestamp> endTime;
-        endTime = (this.jdbcTemplate.queryForList("select endTime from Plog where userIdx=?",Timestamp.class
+    public List<String> getEnd(int userIdx){
+        List<String> endTime;
+        endTime = (this.jdbcTemplate.queryForList("select endTime from Plog where userIdx=?",String.class
                 ,userIdx));
         return endTime;
     }
 
-    public Timestamp getEndByPlogIdx(int plogIdx){
-        return this.jdbcTemplate.queryForObject("select endTime from Plog where plogIdx=?",Timestamp.class
+    public String getEndByPlogIdx(int plogIdx){
+        return this.jdbcTemplate.queryForObject("select endTime from Plog where plogIdx=?",String.class
                 ,plogIdx);
     }
 
@@ -59,7 +60,19 @@ public class PlogDao {
                 ,userIdx));
         return distance;
     }
+
+    public List<String> getArchiveImg(int userIdx){
+        List<String> archiving;
+        archiving = (this.jdbcTemplate.queryForList("select archiving from Plog where userIdx=?",String.class
+                ,userIdx));
+        return archiving;
+    }
     public String getDistanceByPlogIdx(int plogIdx){
+        return this.jdbcTemplate.queryForObject("select distance from Plog where plogIdx=?",String.class
+                ,plogIdx);
+    }
+
+    public String getCalorieByPlogIdx(int plogIdx){
         return this.jdbcTemplate.queryForObject("select distance from Plog where plogIdx=?",String.class
                 ,plogIdx);
     }
@@ -73,16 +86,31 @@ public class PlogDao {
                 userIdx);
     }
 
-    public String getPlogImage(int plogIdx){
-        return this.jdbcTemplate.queryForObject("select archiving from Plog where plogIdx=?",
+    public List<String> getPlogImage(int plogIdx){
+        List<String> pictures = new ArrayList<>();
+        String picture =  this.jdbcTemplate.queryForObject("select picture from Plog where plogIdx=?",
                 String.class,
                 plogIdx);
+        String archiveImg = this.jdbcTemplate.queryForObject("select archiving from Plog where plogIdx=?",
+                String.class,
+                plogIdx);
+        pictures.add(picture);
+        pictures.add(archiveImg);
+        return pictures;
     }
 
     public int checkPlog(int plogIdx){
         return this.jdbcTemplate.queryForObject("select exists(select plogIdx from Plog where plogIdx=?)",
                 Integer.class,
                 plogIdx);
+    }
+
+    public void postPlog(int userIdx, PostPlogReq postPlogReq){
+        String createUserQuery = "insert into Plog (userIdx,distance, calorie ,startTime,endTime,archiving,picture) VALUES (?,?,?,now(),?,?,?)";
+        Object[] createUserParams = new Object[]{
+                userIdx,postPlogReq.getDistance(), postPlogReq.getCalorie(),postPlogReq.getTime() ,postPlogReq.getPictures().get(0),postPlogReq.getPictures().get(1)
+        };
+        this.jdbcTemplate.update(createUserQuery, createUserParams);
     }
 
 }
