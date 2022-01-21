@@ -44,8 +44,12 @@ public enum BaseResponseStatus {
     DUPLICATED_EMAIL(false, 3013, "중복된 이메일입니다."),
     FAILED_TO_LOGIN(false,3014,"없는 아이디거나 비밀번호가 틀렸습니다."),
 
-    FAILED_TO_DELETE(false, 3020, "크루 탈퇴에 실패하였습니다."),
+    NEED_MORE_INFO(false, 3015, "크루 정보를 전부 입력해주세요."),
+    FAILED_TO_DELETE(false, 3016, "크루 탈퇴에 실패하였습니다."),
+    NEED_CREW_STATUS(false, 3017, "크루 status query string을 추가해주세요."),
 
+    INVALID_STATUS(false, 3018, "크루 status는 T 또는 F만 가능합니다."),
+    NOT_IN_CREW(false, 3019, "크루에 있지 않은 유저입니다."),
 
 
     /**

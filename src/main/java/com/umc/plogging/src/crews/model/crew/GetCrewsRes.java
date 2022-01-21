@@ -16,5 +16,7 @@ public class GetCrewsRes {
     private String name;
     private Timestamp targetDay;
     private String region;
+    private int howmany;
+    private int currentNum;
     private String userImage;
 }

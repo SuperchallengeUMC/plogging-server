@@ -11,6 +11,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import javax.sql.DataSource;
 
+import static com.umc.plogging.config.BaseResponseStatus.*;
+
 @Repository
 public class CrewDao {
     private JdbcTemplate jdbcTemplate;
@@ -46,11 +48,21 @@ public class CrewDao {
         return this.jdbcTemplate.queryForObject(lastInsertIdQuery, int.class);
     }
 
-    // Crew 테이블에 존재하는 전체 크루들의 정보 조회
+    public int isCrewExist(int crewIdx) {
+        String crewExistQuery = "select count(*) from Crew where crewIdx=?";
+        int result = this.jdbcTemplate.queryForObject(crewExistQuery, int.class, crewIdx);
+
+        return result;
+    }
+
+    // 전체 크루 조회
     public List<GetCrewsRes> getCrews() {
-        String getCrewsQuery = "select C.crewIdx, C.name, C.targetDay, C.status, C.region, U.userImage\n" +
+        String getCrewsQuery = "select C.crewIdx, C.name, C.targetDay, C.status, C.region, C.contact, C.howmany,\n" +
+                "(select count(*) from Member where C.crewIdx=Member.crewIdx) as currentNum\n" +
+                ", U.userImage\n" +
                 "from Crew C\n" +
-                "inner join User U where C.userIdx=U.userIdx;"; //Crew 테이블에 존재하는 모든 회원들의 정보를 조회하는 쿼리
+                "inner join User U on C.userIdx=U.userIdx\n" +
+                "where howmany > (select count(*) from Member where C.crewIdx=Member.crewIdx)";
         return this.jdbcTemplate.query(getCrewsQuery,
                 (rs, rowNum) -> new GetCrewsRes(
                         rs.getInt("crewIdx"),
@@ -58,11 +70,14 @@ public class CrewDao {
                         rs.getString("name"),
                         rs.getTimestamp("targetDay"),
                         rs.getString("region"),
+                        rs.getInt("howmany"),
+                        rs.getInt("currentNum"),
                         rs.getString("userImage")
                 )
         );
     }
 
+    //특정 크루 조회
     public GetCrewRes getCrew(int crewIdx) {
         String getCrewQuery = "select C.crewIdx, C.name, C.targetDay, C.status, C.region, C.description, U.userImage\n" +
                 "from Crew C\n" +
@@ -80,9 +95,11 @@ public class CrewDao {
                 crewIdx);
     }
 
-    // 해당 region에 속하는 크루들의 정보 조회
+    // 해당 지역에 속하는 크루들의 정보 조회
     public List<GetCrewsRes> getCrewsByRegion(String region) {
-        String getCrewsByRegionQuery = "select C.crewIdx, C.name, C.targetDay, C.status, C.region, U.userImage\n" +
+        String getCrewsByRegionQuery = "select C.crewIdx, C.name, C.targetDay, C.status, C.region, C.howmany,\n" +
+                "(select count(*) from Member where C.crewIdx=Member.crewIdx) as currentNum\n" +
+                ", U.userImage\n" +
                 "from Crew C\n" +
                 "inner join User U where C.userIdx=U.userIdx and C.region=?";
         return this.jdbcTemplate.query(getCrewsByRegionQuery,
@@ -92,14 +109,18 @@ public class CrewDao {
                         rs.getString("name"),
                         rs.getTimestamp("targetDay"),
                         rs.getString("region"),
+                        rs.getInt("howmany"),
+                        rs.getInt("currentNum"),
                         rs.getString("userImage")
                 ),
                 region);
     }
 
     // 가입한 크루들의 정보 조회
-    public List<GetCrewsRes> getCrewsByStatus(char status, int userIdxByJwt) {
-        String getActiveCrewsQuery = "select C.crewIdx, C.status, C.name, C.targetDay, C.region, U.userImage\n" +
+    public List<GetCrewsRes> getCrewsByStatus(char status, int userIdxByJwt) throws BaseException {
+        String getActiveCrewsQuery = "select C.crewIdx, C.name, C.targetDay, C.status, C.region, C.howmany,\n" +
+                "(select count(*) from Member where C.crewIdx=Member.crewIdx) as currentNum\n" +
+                ", U.userImage\n" +
                 "from Crew C\n" +
                 "inner join Member M\n" +
                 "    on C.crewIdx=M.crewIdx\n" +
@@ -107,7 +128,9 @@ public class CrewDao {
                 "    on M.userIdx=U.userIdx\n" +
                 "where M.userIdx=? and timestampdiff(minute, NOW(), C.targetDay) >= 0";
 
-        String getDoneCrewsQuery = "select C.crewIdx, C.status, C.name, C.targetDay C.region, U.userImage\n" +
+        String getDoneCrewsQuery = "select C.crewIdx, C.name, C.targetDay, C.status, C.region, C.howmany,\n" +
+                "(select count(*) from Member where C.crewIdx=Member.crewIdx) as currentNum\n" +
+                ", U.userImage\n" +
                 "from Crew C\n" +
                 "inner join Member M\n" +
                 "    on C.crewIdx=M.crewIdx\n" +
@@ -123,20 +146,29 @@ public class CrewDao {
                             rs.getString("name"),
                             rs.getTimestamp("targetDay"),
                             rs.getString("region"),
+                            rs.getInt("howmany"),
+                            rs.getInt("currentNum"),
                             rs.getString("userImage")
                     ),
                     userIdxByJwt);
         }
-        return this.jdbcTemplate.query(getDoneCrewsQuery,
-                (rs, rowNum) -> new GetCrewsRes(
-                        rs.getInt("crewIdx"),
-                        rs.getString("status").charAt(0),
-                        rs.getString("name"),
-                        rs.getTimestamp("targetDay"),
-                        rs.getString("region"),
-                        rs.getString("userImage")
-                ),
-                userIdxByJwt);
+        else if (status=="F".charAt(0)) {
+            return this.jdbcTemplate.query(getDoneCrewsQuery,
+                    (rs, rowNum) -> new GetCrewsRes(
+                            rs.getInt("crewIdx"),
+                            rs.getString("status").charAt(0),
+                            rs.getString("name"),
+                            rs.getTimestamp("targetDay"),
+                            rs.getString("region"),
+                            rs.getInt("howmany"),
+                            rs.getInt("currentNum"),
+                            rs.getString("userImage")
+                    ),
+                    userIdxByJwt);
+        }
+        else {
+            throw new BaseException(INVALID_STATUS);
+        }
     }
 
     // 크루에 가입한 유저 조회
@@ -160,7 +192,17 @@ public class CrewDao {
         );
     }
 
-    // 크루 탈퇴 (미완성)
+    public int memberInCrew(int crewIdx, int userIdx){
+        String memberInCrewQuery = "select count(*)\n" +
+                "from Member M\n" +
+                "inner join Crew C\n" +
+                "on M.crewIdx = C.crewIdx\n" +
+                "where C.crewIdx=? and M.userIdx=?";
+        Object[] memberInCrewParams = new Object[]{crewIdx, userIdx};
+        return this.jdbcTemplate.update(memberInCrewQuery, memberInCrewParams); // 크루에 있음 - 1, 없음 - 0
+
+    }
+    // 크루 탈퇴
     public int deleteMember(int crewIdx, int userIdx){
         String deleteMemberQuery = "delete from Member where crewIdx = ? and userIdx=?";
         Object[] deleteMemberParams = new Object[]{crewIdx, userIdx};

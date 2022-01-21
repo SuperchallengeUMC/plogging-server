@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.umc.plogging.config.BaseResponseStatus.DATABASE_ERROR;
+import static com.umc.plogging.config.BaseResponseStatus.NEED_MORE_INFO;
+
 @RestController
 @RequestMapping("/crews")
 
@@ -40,6 +43,9 @@ public class CrewController {
     @ResponseBody
     @PostMapping("")
     public BaseResponse<PostCrewRes> createCrew(@RequestBody PostCrewReq postCrewReq) {
+        if(postCrewReq.getName() == null || postCrewReq.getDescription() == null || Integer.valueOf(postCrewReq.getHowmany()) == null || postCrewReq.getTargetDay() == null || postCrewReq.getContact() == null || postCrewReq.getRegion() == null) {
+            return new BaseResponse<>(NEED_MORE_INFO);
+        }
         try {
             PostCrewRes postCrewRes = crewService.createCrew(postCrewReq);
             return new BaseResponse<>(postCrewRes);
@@ -81,11 +87,9 @@ public class CrewController {
         try {
             int userIdxByJwt = jwtService.getUserIdx();
 
-            /*
-            if (status == null) {
-                // status queryString을 추가해주세요라는 에러 메세지
+            if (status == 0) { // 이 부분 에러 나서 수정 필요 ! ! !
+                throw new BaseException(DATABASE_ERROR);
             }
-             */
 
             List<GetCrewsRes> getCrewsRes = crewProvider.getCrewsByStatus(status, userIdxByJwt);
             return new BaseResponse<>(getCrewsRes);
@@ -113,7 +117,7 @@ public class CrewController {
 
     /**
      * 크루 소속 크루원 조회 API
-     * [GET] /crews/:userIdx
+     * [GET] /crews/:crewIdx/member
      */
     // Path-variable
     @ResponseBody
@@ -148,13 +152,14 @@ public class CrewController {
 
     /**
      * 크루 탈퇴 API
-     * [DELETE] /crews/:crewIdx/:userIdx
+     * [DELETE] /crews/:crewIdx
      */
     @ResponseBody
-    @DeleteMapping("/{crewIdx}/{userIdx}")
-    public BaseResponse<String> DeleteMember(@PathVariable("crewIdx") int crewIdx, @PathVariable("userIdx") int userIdx) {
+    @DeleteMapping("/{crewIdx}")
+    public BaseResponse<String> DeleteMember(@PathVariable("crewIdx") int crewIdx) {
         try {
-            crewService.deleteMember(crewIdx, userIdx);
+            int userIdxByJwt = jwtService.getUserIdx();
+            crewService.deleteMember(crewIdx, userIdxByJwt);
             String result = "크루를 탈퇴하였습니다.";
 
             return new BaseResponse<>(result);
