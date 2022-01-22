@@ -49,7 +49,8 @@ public class CrewController {
             return new BaseResponse<>(NEED_MORE_INFO);
         }
         try {
-            PostCrewRes postCrewRes = crewService.createCrew(postCrewReq);
+            int userIdxByJwt = jwtService.getUserIdx();
+            PostCrewRes postCrewRes = crewService.createCrew(postCrewReq, userIdxByJwt);
             return new BaseResponse<>(postCrewRes);
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));

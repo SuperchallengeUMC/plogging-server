@@ -20,13 +20,18 @@ public class CrewService {
     }
 
     // 크루 생성(POST)
-    public PostCrewRes createCrew(PostCrewReq postCrewReq) throws BaseException {
+    public PostCrewRes createCrew(PostCrewReq postCrewReq, int userIdxByJwt) throws BaseException {
+        int crewIdx = crewDao.createCrew(postCrewReq, userIdxByJwt);
+        return new PostCrewRes(crewIdx);
+        /*
         try {
-            int crewIdx = crewDao.createCrew(postCrewReq);
+            int crewIdx = crewDao.createCrew(postCrewReq, userIdxByJwt);
             return new PostCrewRes(crewIdx);
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }
+
+         */
     }
 
     // 크루 가입(POST)

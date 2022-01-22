@@ -23,16 +23,16 @@ public class CrewDao {
     }
 
     // 크루 생성
-    public int createCrew(PostCrewReq postCrewReq) {
+    public int createCrew(PostCrewReq postCrewReq, int userIdxByJwt) {
         String createCrewQuery = "insert into Crew (userIdx, createdAt, name, description, howmany, targetDay, contact, region) VALUES (?,NOW(),?,?,?,?,?,?)";
-        Object[] createCrewParams = new Object[]{postCrewReq.getUserIdx(), postCrewReq.getName(), postCrewReq.getDescription(), postCrewReq.getHowmany(), postCrewReq.getTargetDay(), postCrewReq.getContact(), postCrewReq.getRegion()};
+        Object[] createCrewParams = new Object[]{userIdxByJwt, postCrewReq.getName(), postCrewReq.getDescription(), postCrewReq.getHowmany(), postCrewReq.getTargetDay(), postCrewReq.getContact(), postCrewReq.getRegion()};
         this.jdbcTemplate.update(createCrewQuery, createCrewParams);
 
         String lastInsertIdQuery = "select last_insert_id()";
         int crewIdx = this.jdbcTemplate.queryForObject(lastInsertIdQuery, int.class);
 
         String setKingQuery = "insert into Member (crewIdx, userIdx, createdAt, isKing) values (?,?,NOW(),?)";
-        Object[] setKingParams = new Object[]{crewIdx, postCrewReq.getUserIdx(),"T"};
+        Object[] setKingParams = new Object[]{crewIdx, userIdxByJwt,"T"};
         this.jdbcTemplate.update(setKingQuery, setKingParams);
 
         return crewIdx;
