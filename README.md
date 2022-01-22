@@ -34,10 +34,10 @@
 
 ## 👀 미리 보기
 ----
-|<img width=240 src = "https://user-images.githubusercontent.com/59572441/150625814-4e4911b8-ab9b-4df3-b10b-cdc474e57827.png"/>|<img src = "https://user-images.githubusercontent.com/59572441/149907878-fbeb204c-65ac-4780-a79e-77583e30eac8.png"/>|<img src = "https://user-images.githubusercontent.com/59572441/149905541-95ec2c7a-bf77-4f39-a297-9c2597c12471.png"/>|
+|<img width=240 src = "https://user-images.githubusercontent.com/59572441/150625814-4e4911b8-ab9b-4df3-b10b-cdc474e57827.png"/>|<img width=240 src = "https://user-images.githubusercontent.com/59572441/150625878-92b355d2-1f88-4384-a203-e4d96ec8bede.png"/>|<img width=240 src = "https://user-images.githubusercontent.com/59572441/150625933-42829323-65cf-4f1a-8af4-d5dfc942bcd7.png"/>|
 |:------:|:---:|:---:|
 |기록화면|플로깅 화면|크루 화면|
-|<img width=240 src = "https://user-images.githubusercontent.com/59572441/150625757-aadcd0bf-5e9d-4af8-a534-cf1e33dfb59d.png"/>|<img src = "https://user-images.githubusercontent.com/59572441/149904555-63461ce0-b53d-488c-b228-4eeb988cf484.png"/>|<img src = "https://user-images.githubusercontent.com/59572441/149906899-a352c776-f05f-4099-bfa7-2c7e568ff342.png"/>|
+|<img width=240 src = "https://user-images.githubusercontent.com/59572441/150625757-aadcd0bf-5e9d-4af8-a534-cf1e33dfb59d.png"/>|<img width=240 src = "https://user-images.githubusercontent.com/59572441/150625908-d990376d-c842-4bb9-8737-b2f89379b63b.png"/>|<img width=240 src = "https://user-images.githubusercontent.com/59572441/150625994-b9017606-69a7-479e-ae4e-7306b2368dd2.png"/>|
 
 
 
