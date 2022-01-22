@@ -1,6 +1,6 @@
-# Plogging 🍀
+# Plocka 🍀
 -------
-<p align="center"><img src = "https://user-images.githubusercontent.com/59572441/149891068-21479ecc-84d3-4d2d-94a5-5e35ed685689.png" height="300"/></p>
+<p align="center"><img src = "https://user-images.githubusercontent.com/59572441/150642747-33df6bb3-745d-47ed-8a99-1180c083bf51.png" height="300"/></p>
 <div align="center">📅 2022.01.14 ~ 2022.01.23 </div>
 
 <div align="center">
