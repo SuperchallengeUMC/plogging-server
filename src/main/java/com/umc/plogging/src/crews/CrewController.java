@@ -3,9 +3,7 @@ package com.umc.plogging.src.crews;
 import com.umc.plogging.src.crews.model.crew.*;
 import com.umc.plogging.src.crews.model.member.*;
 import com.umc.plogging.utils.JwtService;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,6 +41,12 @@ public class CrewController {
      * [POST] /crews
      */
     // Body
+    @ApiResponses({
+            @ApiResponse(code = 1000, message = "성공"),
+            @ApiResponse(code = 2001, message = "JWT를 입력해주세요."),
+            @ApiResponse(code = 2002, message = "유효하지 않은 JWT입니다."),
+            @ApiResponse(code = 3015, message = "크루 정보를 전부 입력해주세요.")
+    })
     @ApiOperation(value = "크루 개설", notes = "크루를 만들고, 만든 사람이 크루장이 됩니다.")
     @ApiImplicitParams({@ApiImplicitParam(name = "X-ACCESS-TOKEN", value = "JWT Token", required = false,dataType = "string"
             , paramType = "header")})
@@ -89,6 +93,13 @@ public class CrewController {
      * 가입한 크루 조회 API
      * [GET] /crews/mycrews?status=""
      */
+    @ApiResponses({
+            @ApiResponse(code = 1000, message = "성공"),
+            @ApiResponse(code = 2001, message = "JWT를 입력해주세요."),
+            @ApiResponse(code = 2002, message = "유효하지 않은 JWT입니다."),
+            @ApiResponse(code = 3017, message = "크루 status query string을 추가해주세요."),
+            @ApiResponse(code = 3018, message = "크루 status는 T 또는 F만 가능합니다."),
+    })
     @ApiOperation(value = "가입한 크루 조회", notes = "query string으로 status(T,F)를 구분")
     @ApiImplicitParams({@ApiImplicitParam(name = "X-ACCESS-TOKEN", value = "JWT Token", required = false,dataType = "string"
             ,paramType = "header")})
@@ -170,6 +181,14 @@ public class CrewController {
      * 크루 탈퇴 API
      * [DELETE] /crews/:crewIdx
      */
+    @ApiResponses({
+            @ApiResponse(code = 1000, message = "성공"),
+            @ApiResponse(code = 2001, message = "JWT를 입력해주세요."),
+            @ApiResponse(code = 2002, message = "유효하지 않은 JWT입니다."),
+            @ApiResponse(code = 3016, message = "크루 탈퇴에 실패하였습니다."),
+            @ApiResponse(code = 3019, message = "크루에 있지 않은 유저입니다.")
+
+    })
     @ApiOperation(value = "크루 탈퇴", notes = "crewIdx를 이용하여 해당 크루를 탈퇴")
     @ApiImplicitParams({@ApiImplicitParam(name = "X-ACCESS-TOKEN", value = "JWT Token", required = false,dataType = "string"
             ,paramType = "header")})
