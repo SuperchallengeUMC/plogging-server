@@ -79,9 +79,10 @@ public class CrewDao {
 
     //특정 크루 조회
     public GetCrewRes getCrew(int crewIdx) {
-        String getCrewQuery = "select C.crewIdx, C.name, C.targetDay, C.status, C.region, C.description, U.userImage\n" +
+        String getCrewQuery = "select C.crewIdx, C.status, C.name, C.targetDay, C.region, C.description, C.contact, U.userImage,\n" +
+                "(select count(*) from Member where C.crewIdx=Member.crewIdx) as currentNum, C.howmany\n" +
                 "from Crew C\n" +
-                "inner join User U where C.userIdx=U.userIdx and crewIdx=?";
+                "inner join User U where C.userIdx=U.userIdx and C.crewIdx=?";
         return this.jdbcTemplate.queryForObject(getCrewQuery,
                 (rs, rowNum) -> new GetCrewRes(
                         rs.getInt("crewIdx"),
@@ -90,7 +91,10 @@ public class CrewDao {
                         rs.getTimestamp("targetDay"),
                         rs.getString("region"),
                         rs.getString("description"),
-                        rs.getString("userImage")
+                        rs.getString("contact"),
+                        rs.getString("userImage"),
+                        rs.getInt("currentNum"),
+                        rs.getInt("howMany")
                 ),
                 crewIdx);
     }

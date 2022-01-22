@@ -30,12 +30,17 @@ public class CrewProvider {
     }
 
     public GetCrewRes getCrew(int crewIdx) throws BaseException {
+        GetCrewRes getCrewRes = crewDao.getCrew(crewIdx);
+        return getCrewRes;
+        /*
         try {
             GetCrewRes getCrewRes = crewDao.getCrew(crewIdx);
             return getCrewRes;
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }
+
+         */
     }
 
     public List<GetMemberRes> getMembers(int crewIdx) throws BaseException {
