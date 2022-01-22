@@ -63,4 +63,6 @@
 
 
 ## ☑ 기타
-_링크 들어갈게 있나_
+❤ <a href="https://www.figma.com/file/trkEGjTmCxMH7gWqHQ5CRs/Plogging?node-id=0%3A1" target="_blank"><font size="5" color="		#FF69B4">Figma Link</a></font>
+
+💚 <a href="http://byeongwoo.shop:8080/swagger-ui.html#" target="_blank"><font size="5" color="		#008080">Swagger Link</a></font>
