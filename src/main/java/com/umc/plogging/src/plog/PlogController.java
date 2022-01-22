@@ -48,7 +48,8 @@ public class PlogController {
     @ApiResponses({
             @ApiResponse(code = 1000, message = "성공"),
             @ApiResponse(code = 2001, message = "JWT를 입력해주세요."),
-            @ApiResponse(code = 2002, message = "유효하지 않은 JWT입니다.")
+            @ApiResponse(code = 2002, message = "유효하지 않은 JWT입니다."),
+            @ApiResponse(code = 2020, message = "없는 기록입니다.")
     })
     @ApiOperation(value = "달력 개별 플로깅보기", response = BaseResponse.class)
     @ApiImplicitParams({@ApiImplicitParam(name = "X-ACCESS-TOKEN", value = "JWT Token", required = false,dataType = "string"
@@ -72,6 +73,7 @@ public class PlogController {
             @ApiResponse(code = 2001, message = "JWT를 입력해주세요."),
             @ApiResponse(code = 2002, message = "유효하지 않은 JWT입니다.")
     })
+    @ApiOperation(value = "플로깅 기록 넣기", response = BaseResponse.class)
     @PostMapping("/plogs")
     public BaseResponse postPlog(@RequestBody PostPlogReq postPlogReq){
         try {
@@ -91,6 +93,7 @@ public class PlogController {
             @ApiResponse(code = 2001, message = "JWT를 입력해주세요."),
             @ApiResponse(code = 2002, message = "유효하지 않은 JWT입니다.")
     })
+    @ApiOperation(value = "아카이빙 화면", response = BaseResponse.class)
     @GetMapping("/plogs/archive")
     public BaseResponse<GetArchive> getArchive(){
         try {
