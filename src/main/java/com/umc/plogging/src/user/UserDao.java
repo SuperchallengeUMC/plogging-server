@@ -20,7 +20,6 @@ public class UserDao {
     }
 
     public void createUser(PostUserReq postuserReq){
-        System.out.println(postuserReq.getPassword());
         String createUserQuery = "insert into User (userImage,name, comment ,password) VALUES (?,?,?,?)";
         Object[] createUserParams = new Object[]{
                 postuserReq.getUserImage(),postuserReq.getNickName(), postuserReq.getComment(), postuserReq.getPassword()
