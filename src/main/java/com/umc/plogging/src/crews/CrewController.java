@@ -8,7 +8,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;;
+import org.springframework.web.bind.annotation.RestController;
 import com.umc.plogging.config.BaseException;
 import com.umc.plogging.config.BaseResponse;
 import org.springframework.web.bind.annotation.*;
@@ -98,7 +98,7 @@ public class CrewController {
         try {
             int userIdxByJwt = jwtService.getUserIdx();
 
-            if (status == 0) { // 이 부분 에러 나서 수정 필요 ! ! !
+            if (status == 0) {
                 throw new BaseException(DATABASE_ERROR);
             }
 
