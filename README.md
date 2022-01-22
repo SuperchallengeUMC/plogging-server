@@ -49,7 +49,7 @@
 
 ## 👀 미리 보기
 ----
-|<img width=240 src = "https://user-images.githubusercontent.com/59572441/150625814-4e4911b8-ab9b-4df3-b10b-cdc474e57827.png"/>|<img width=240 src = "https://user-images.githubusercontent.com/59572441/150625878-92b355d2-1f88-4384-a203-e4d96ec8bede.png"/>|<img width=240 src = "https://user-images.githubusercontent.com/59572441/150625933-42829323-65cf-4f1a-8af4-d5dfc942bcd7.png"/>|
+|<img width=240 src = "https://user-images.githubusercontent.com/59572441/150625814-4e4911b8-ab9b-4df3-b10b-cdc474e57827.png"/>|<img width=240 src = "https://user-images.githubusercontent.com/59572441/150647296-30ee89c0-72d3-43dc-8f65-bd709c6a335a.png"/>|<img width=240 src = "https://user-images.githubusercontent.com/59572441/150625933-42829323-65cf-4f1a-8af4-d5dfc942bcd7.png"/>|
 |:------:|:---:|:---:|
 |기록화면|플로깅 화면|크루 화면|
 |<img width=240 src = "https://user-images.githubusercontent.com/59572441/150625757-aadcd0bf-5e9d-4af8-a534-cf1e33dfb59d.png"/>|<img width=240 src = "https://user-images.githubusercontent.com/59572441/150625908-d990376d-c842-4bb9-8737-b2f89379b63b.png"/>|<img width=240 src = "https://user-images.githubusercontent.com/59572441/150625994-b9017606-69a7-479e-ae4e-7306b2368dd2.png"/>|
