@@ -3,6 +3,9 @@ package com.umc.plogging.src.crews;
 import com.umc.plogging.src.crews.model.crew.*;
 import com.umc.plogging.src.crews.model.member.*;
 import com.umc.plogging.utils.JwtService;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;;
@@ -40,6 +43,9 @@ public class CrewController {
      * [POST] /crews
      */
     // Body
+    @ApiOperation(value = "크루 개설", notes = "크루를 만들고, 만든 사람이 크루장이 됩니다.")
+    @ApiImplicitParams({@ApiImplicitParam(name = "X-ACCESS-TOKEN", value = "JWT Token", required = false,dataType = "string"
+            , paramType = "header")})
     @ResponseBody
     @PostMapping("")
     public BaseResponse<PostCrewRes> createCrew(@RequestBody PostCrewReq postCrewReq) {
@@ -47,7 +53,8 @@ public class CrewController {
             return new BaseResponse<>(NEED_MORE_INFO);
         }
         try {
-            PostCrewRes postCrewRes = crewService.createCrew(postCrewReq);
+            int userIdxByJwt = jwtService.getUserIdx();
+            PostCrewRes postCrewRes = crewService.createCrew(postCrewReq, userIdxByJwt);
             return new BaseResponse<>(postCrewRes);
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
@@ -61,6 +68,7 @@ public class CrewController {
      * 해당 지역 크루 조회 API
      * [GET] /crews?region=""
      */
+    @ApiOperation(value = "크루 조회", notes = "모든 크루 조회, query string을 이용하여 지역별 크루 조회")
     @ResponseBody
     @GetMapping("")
     public BaseResponse<List<GetCrewsRes>> getCrews(@RequestParam(required = false) String region) {
@@ -81,6 +89,9 @@ public class CrewController {
      * 가입한 크루 조회 API
      * [GET] /crews/mycrews?status=""
      */
+    @ApiOperation(value = "가입한 크루 조회", notes = "query string으로 status(T,F)를 구분")
+    @ApiImplicitParams({@ApiImplicitParam(name = "X-ACCESS-TOKEN", value = "JWT Token", required = false,dataType = "string"
+            ,paramType = "header")})
     @ResponseBody
     @GetMapping("/mycrews")
     public BaseResponse<List<GetCrewsRes>> getMyCrews(@RequestParam(required = false) char status) {
@@ -100,9 +111,10 @@ public class CrewController {
 
     /**
      * 크루 하나 조회 API
-     * [GET] /crews/:userIdx
+     * [GET] /crews/:crewIdx
      */
     // Path-variable
+    @ApiOperation(value = "하나의 크루 조회", notes = "crewIdx를 이용하여 크루 조회, 크루 상세 페이지에서 사용")
     @ResponseBody
     @GetMapping("/{crewIdx}")
     public BaseResponse<GetCrewRes> getCrew(@PathVariable("crewIdx") int crewIdx) {
@@ -120,6 +132,7 @@ public class CrewController {
      * [GET] /crews/:crewIdx/member
      */
     // Path-variable
+    @ApiOperation(value = "크루 소속 크루원 조회", notes = "crewIdx를 통해 그 크루에 속한 크루원 리스트를 조회")
     @ResponseBody
     @GetMapping("/{crewIdx}/member")
     public BaseResponse<List<GetMemberRes>> getMembers(@PathVariable("crewIdx") int crewIdx) {
@@ -138,6 +151,9 @@ public class CrewController {
      * [POST] /crews/:crewIdx
      */
     // Body
+    @ApiOperation(value = "크루 가입", notes = "crewIdx를 통해 해당 크루 가입")
+    @ApiImplicitParams({@ApiImplicitParam(name = "X-ACCESS-TOKEN", value = "JWT Token", required = false,dataType = "string"
+            ,paramType = "header")})
     @ResponseBody
     @PostMapping("/{crewIdx}")
     public BaseResponse<PostMemberRes> joinCrew(@PathVariable("crewIdx") int crewIdx) {
@@ -154,6 +170,9 @@ public class CrewController {
      * 크루 탈퇴 API
      * [DELETE] /crews/:crewIdx
      */
+    @ApiOperation(value = "크루 탈퇴", notes = "crewIdx를 이용하여 해당 크루를 탈퇴")
+    @ApiImplicitParams({@ApiImplicitParam(name = "X-ACCESS-TOKEN", value = "JWT Token", required = false,dataType = "string"
+            ,paramType = "header")})
     @ResponseBody
     @DeleteMapping("/{crewIdx}")
     public BaseResponse<String> DeleteMember(@PathVariable("crewIdx") int crewIdx) {
