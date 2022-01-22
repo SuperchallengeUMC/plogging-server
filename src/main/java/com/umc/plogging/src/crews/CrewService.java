@@ -11,12 +11,10 @@ import static com.umc.plogging.config.BaseResponseStatus.*;
 @Service
 public class CrewService {
     private final CrewDao crewDao;
-    private final CrewProvider crewProvider;
 
     @Autowired
-    public CrewService(CrewDao crewDao, CrewProvider crewProvider) {
+    public CrewService(CrewDao crewDao) {
         this.crewDao = crewDao;
-        this.crewProvider = crewProvider;
     }
 
     // 크루 생성(POST)
