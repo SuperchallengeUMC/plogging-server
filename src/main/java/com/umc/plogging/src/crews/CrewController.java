@@ -3,6 +3,8 @@ package com.umc.plogging.src.crews;
 import com.umc.plogging.src.crews.model.crew.*;
 import com.umc.plogging.src.crews.model.member.*;
 import com.umc.plogging.utils.JwtService;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,6 +44,8 @@ public class CrewController {
      */
     // Body
     @ApiOperation(value = "크루 개설", notes = "크루를 만들고, 만든 사람이 크루장이 됩니다.")
+    @ApiImplicitParams({@ApiImplicitParam(name = "X-ACCESS-TOKEN", value = "JWT Token", required = false,dataType = "string"
+            , paramType = "header")})
     @ResponseBody
     @PostMapping("")
     public BaseResponse<PostCrewRes> createCrew(@RequestBody PostCrewReq postCrewReq) {
@@ -86,6 +90,8 @@ public class CrewController {
      * [GET] /crews/mycrews?status=""
      */
     @ApiOperation(value = "가입한 크루 조회", notes = "query string으로 status(T,F)를 구분")
+    @ApiImplicitParams({@ApiImplicitParam(name = "X-ACCESS-TOKEN", value = "JWT Token", required = false,dataType = "string"
+            ,paramType = "header")})
     @ResponseBody
     @GetMapping("/mycrews")
     public BaseResponse<List<GetCrewsRes>> getMyCrews(@RequestParam(required = false) char status) {
@@ -146,6 +152,8 @@ public class CrewController {
      */
     // Body
     @ApiOperation(value = "크루 가입", notes = "crewIdx를 통해 해당 크루 가입")
+    @ApiImplicitParams({@ApiImplicitParam(name = "X-ACCESS-TOKEN", value = "JWT Token", required = false,dataType = "string"
+            ,paramType = "header")})
     @ResponseBody
     @PostMapping("/{crewIdx}")
     public BaseResponse<PostMemberRes> joinCrew(@PathVariable("crewIdx") int crewIdx) {
@@ -163,6 +171,8 @@ public class CrewController {
      * [DELETE] /crews/:crewIdx
      */
     @ApiOperation(value = "크루 탈퇴", notes = "crewIdx를 이용하여 해당 크루를 탈퇴")
+    @ApiImplicitParams({@ApiImplicitParam(name = "X-ACCESS-TOKEN", value = "JWT Token", required = false,dataType = "string"
+            ,paramType = "header")})
     @ResponseBody
     @DeleteMapping("/{crewIdx}")
     public BaseResponse<String> DeleteMember(@PathVariable("crewIdx") int crewIdx) {
