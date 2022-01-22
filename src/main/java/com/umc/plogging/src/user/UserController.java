@@ -31,8 +31,6 @@ public class UserController {
     @PostMapping("/user")
     @ApiResponses({
             @ApiResponse(code = 1000, message = "성공"),
-            @ApiResponse(code = 2001, message = "JWT를 입력해주세요."),
-            @ApiResponse(code = 2002, message = "유효하지 않은 JWT입니다."),
             @ApiResponse(code = 2000, message = "입력값을 확인해주세요."),
             @ApiResponse(code = 2018, message = "중복된 닉네임입니다.")
     })
@@ -52,8 +50,6 @@ public class UserController {
     @PostMapping("/login")
     @ApiResponses({
             @ApiResponse(code = 1000, message = "성공"),
-            @ApiResponse(code = 2001, message = "JWT를 입력해주세요."),
-            @ApiResponse(code = 2002, message = "유효하지 않은 JWT입니다."),
             @ApiResponse(code = 3014, message = "없는 아이디거나 비밀번호가 틀렸습니다.")
     })
     @ApiOperation(value = "로그인", response = BaseResponse.class)
