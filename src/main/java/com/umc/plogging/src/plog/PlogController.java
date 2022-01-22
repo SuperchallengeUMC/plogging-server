@@ -26,6 +26,11 @@ public class PlogController {
     @ApiImplicitParams({@ApiImplicitParam(name = "X-ACCESS-TOKEN", value = "JWT Token", required = false,dataType = "string"
             ,paramType = "header")})
     @ApiOperation(value = "홈 화면", response = BaseResponse.class)
+    @ApiResponses({
+            @ApiResponse(code = 1000, message = "성공"),
+            @ApiResponse(code = 2001, message = "JWT를 입력해주세요."),
+            @ApiResponse(code = 2002, message = "유효하지 않은 JWT입니다.")
+    })
     @GetMapping("/homes")
     public BaseResponse<HomeRes> getHome(){
         try {
@@ -62,6 +67,11 @@ public class PlogController {
 
     @ApiImplicitParams({@ApiImplicitParam(name = "X-ACCESS-TOKEN", value = "JWT Token", required = false,dataType = "string"
             ,paramType = "header")})
+    @ApiResponses({
+            @ApiResponse(code = 1000, message = "성공"),
+            @ApiResponse(code = 2001, message = "JWT를 입력해주세요."),
+            @ApiResponse(code = 2002, message = "유효하지 않은 JWT입니다.")
+    })
     @PostMapping("/plogs")
     public BaseResponse postPlog(@RequestBody PostPlogReq postPlogReq){
         try {
@@ -76,6 +86,11 @@ public class PlogController {
 
     @ApiImplicitParams({@ApiImplicitParam(name = "X-ACCESS-TOKEN", value = "JWT Token", required = false,dataType = "string"
             ,paramType = "header")})
+    @ApiResponses({
+            @ApiResponse(code = 1000, message = "성공"),
+            @ApiResponse(code = 2001, message = "JWT를 입력해주세요."),
+            @ApiResponse(code = 2002, message = "유효하지 않은 JWT입니다.")
+    })
     @GetMapping("/plogs/archive")
     public BaseResponse<GetArchive> getArchive(){
         try {
